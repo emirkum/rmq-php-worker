@@ -1,0 +1,30 @@
+version: '3'
+
+services:
+  worker-rabbitmq:
+    image: mujic0000/worker-rabbitmq:v1.0
+    restart: always
+    build: ./
+    links:
+      - mysql
+      - rabbitmq
+
+  mysql:
+    image: mysql/mysql-server:latest
+    restart: always
+    environment:
+      MYSQL_DATABASE: rmq_db
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_ROOT_HOST: '%'
+    ports:
+      - 3306
+    volumes:
+      - ./db/rmq_db.sql:/docker-entrypoint-initdb.d/rmq_db.sql
+  
+  rabbitmq:
+    image: library/rabbitmq:latest
+    ports:
+      - 5672
+    environment: 
+      RABBITMQ_DEFAULT_PASS: guest
+      RABBITMQ_DEFAULT_USER: guest

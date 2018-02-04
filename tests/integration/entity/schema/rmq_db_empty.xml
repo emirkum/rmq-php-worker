@@ -1,0 +1,13 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="transactions">
+        <column>transaction_id</column>
+        <column>amount</column>
+        <column>currency</column>
+    </table>
+
+    <table name="balance">
+        <column>id</column>
+        <column>balance</column>
+    </table>
+</dataset>

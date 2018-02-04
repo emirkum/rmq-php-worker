@@ -1,0 +1,8 @@
+FROM php:7.1-apache
+
+COPY . /var/www/html/worker-rabbitmq
+WORKDIR /var/www/html/worker-rabbitmq
+
+CMD [ "php", "./worker.php" ]
+
+EXPOSE 8080

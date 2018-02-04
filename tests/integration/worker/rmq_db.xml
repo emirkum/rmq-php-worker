@@ -1,0 +1,24 @@
+<?xml version="1.0" ?>
+<dataset>
+    <table name="transactions">
+        <column>transaction_id</column>
+        <column>amount</column>
+        <column>currency</column>
+
+        <row>
+            <value>999</value>
+            <value>100</value>
+            <value>EUR</value>
+        </row>
+    </table>
+
+    <table name="balance">
+        <column>id</column>
+        <column>balance</column>
+
+        <row>
+            <value>111</value>
+            <value>100</value>
+        </row>
+    </table>
+</dataset>
