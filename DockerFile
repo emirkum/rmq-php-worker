@@ -1,8 +1,14 @@
-FROM php:7.1-apache
+FROM disc/php-amqp
 
-COPY . /worker-rabbitmq
-WORKDIR /worker-rabbitmq
+COPY . /srv/app
 
-CMD [ "php", "./worker.php" ]
+RUN apt-get update && \
+    apt-get install -y --no-install-recommends git rabbitmq-server
 
-EXPOSE 8080
+WORKDIR /srv/app
+
+RUN curl --silent --show-error https://getcomposer.org/installer | php
+
+RUN php composer.phar install --no-dev
+
+ENTRYPOINT service rabbitmq-server start && php worker.php

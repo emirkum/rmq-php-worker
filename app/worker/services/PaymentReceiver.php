@@ -104,6 +104,7 @@ class PaymentReceiver implements IReceiver
         $trans = json_decode($msg->body);
 
         if (is_object($trans) && isset($trans->amount) && isset($trans->currency)) {
+            echo "New message. \n";
             $payment = new Payment();
             $payment->setAmount($trans->amount);
             $payment->setCurrency($trans->currency);
