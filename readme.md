@@ -1,1 +1,1 @@
-## RMQ-PHP-APP
+## RMQ-PHP-WORKER
