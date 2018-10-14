@@ -11,10 +11,6 @@ RUN curl --silent --show-error https://getcomposer.org/installer | php
 
 RUN php composer.phar install --no-dev
 
-<<<<<<< HEAD:Dockerfile
-ENTRYPOINT service rabbitmq-server start && php worker.php
-=======
 EXPOSE 5672
 
 ENTRYPOINT php worker.php
->>>>>>> dockerfix:DockerFile
