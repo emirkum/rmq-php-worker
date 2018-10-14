@@ -13,25 +13,6 @@ use RMQPHP\App\Worker\Payment;
  */
 class PaymentReceiver implements IReceiver
 {
-    /**
-     * @var string  RabbitMQ Host name
-     */
-    const RMQHOST = 'localhost';
-
-    /**
-     * @var int  RabbitMQ Port
-     */
-    const RMQPORT = 5672;
-    
-    /**
-     * @var string RabbitMQ User name
-     */
-    const RMQUSER = 'guest';
-    
-    /**
-     * @var string RabbitMQ Password
-     */
-    const RMQPASSWORD = 'guest';
 
     /**
      * @var string  RabbitMQ Queue name
@@ -59,7 +40,14 @@ class PaymentReceiver implements IReceiver
      * Process incoming request to add new payment
      */ 
     public function listen() : void {        
-        $connection = new AMQPStreamConnection(self::RMQHOST, self::RMQPORT, self::RMQUSER, self::RMQPASSWORD);
+        $connection = new AMQPStreamConnection
+        (            
+            getenv('RMQHOST'),
+            getenv('RMQPORT'),
+            getenv('RMQUSER'),
+            getenv('RMQPASSWORD')
+        );
+        
         $channel = $connection->channel();
         
         $channel->queue_declare(
@@ -104,7 +92,7 @@ class PaymentReceiver implements IReceiver
         $trans = json_decode($msg->body);
 
         if (is_object($trans) && isset($trans->amount) && isset($trans->currency)) {
-            echo "New message. \n";
+            echo "New message.";
             $payment = new Payment();
             $payment->setAmount($trans->amount);
             $payment->setCurrency($trans->currency);
