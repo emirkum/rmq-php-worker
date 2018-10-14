@@ -12,26 +12,6 @@ use PDO;
 class Database
 {
     /**
-     * @var string  Database host name
-     */
-    protected $host = 'localhost';
-
-    /**
-     * @var string  Database name
-     */
-    protected $database_name = 'rmq_db';
-
-    /**
-     * @var string  Database user
-     */
-    protected $username = 'root';
-
-    /**
-     * @var string  Database password
-     */
-    protected $password = '';
-
-    /**
      * static Database instance
      * 
      * @var Database
@@ -56,6 +36,11 @@ class Database
      * Create PDO connection
      */
     public function connection() : PDO {
+        $this->host = getenv('MYSQLHOST');
+        $this->database_name = getenv('MYSQLDB');
+        $this->username = getenv('MYSQLUSER');
+        $this->password = getenv('MYSQLPASS');
+
         if ($this->conn === null) {
             try {
                 $conn = new PDO("mysql:host=$this->host;dbname=$this->database_name", $this->username, $this->password);
