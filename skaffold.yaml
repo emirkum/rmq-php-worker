@@ -1,0 +1,24 @@
+apiVersion: skaffold/v1alpha4
+kind: Config
+build:
+  artifacts:
+  - image: worker-rabbitmq
+    context: .
+    docker:
+      dockerfile: ./Dockerfile
+  tagPolicy:
+    envTemplate:
+      template: '{{.IMAGE_NAME}}'
+  local:
+    push: false
+deploy:
+  helm:
+    releases:
+    - name: rmq-worker
+      chartPath: rmq-php-worker
+      valuesFiles:
+      - rmq-php-worker/values.yaml
+      values:
+        image: worker-rabbitmq
+      namespace: default
+      recreatePods: true

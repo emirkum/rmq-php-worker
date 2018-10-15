@@ -1,0 +1,92 @@
+apiVersion: apps/v1beta2
+kind: Deployment
+metadata:
+  name: {{ include "rmq-php-worker.fullname" . }}
+  labels:
+    app.kubernetes.io/name: {{ include "rmq-php-worker.name" . }}
+    helm.sh/chart: {{ include "rmq-php-worker.chart" . }}
+    app.kubernetes.io/instance: {{ .Release.Name }}
+    app.kubernetes.io/managed-by: {{ .Release.Service }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "rmq-php-worker.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "rmq-php-worker.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.imageDetails.repository }}:{{ .Values.imageDetails.tag }}"
+          env:          
+          - name: "RMQHOST"
+            valueFrom:
+              secretKeyRef:
+                key:  rmqhost
+                name: {{ .Release.Name }}-auth
+          - name: "RMQPORT"
+            valueFrom:
+              secretKeyRef:
+                key:  rmqport
+                name: {{ .Release.Name }}-auth
+          - name: "RMQUSER"
+            valueFrom:
+              secretKeyRef:
+                key:  rmquser
+                name: {{ .Release.Name }}-auth
+          - name: "RMQPASS"
+            valueFrom:
+              secretKeyRef:
+                key:  rmqpass
+                name: {{ .Release.Name }}-auth
+          - name: "MTSQLHOST"
+            valueFrom:
+              secretKeyRef:
+                key:  mysqlhost
+                name: {{ .Release.Name }}-auth
+          - name: "MTSQLUSER"
+            valueFrom:
+              secretKeyRef:
+                key:  mysqluser
+                name: {{ .Release.Name }}-auth
+          - name: "MTSQLPASS"
+            valueFrom:
+              secretKeyRef:
+                key:  mysqlpassword
+                name: {{ .Release.Name }}-auth
+          - name: "MTSQLDB"
+            valueFrom:
+              secretKeyRef:
+                key:  mysqldatabase
+                name: {{ .Release.Name }}-auth
+          imagePullPolicy: {{ .Values.imageDetails.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+          resources:
+{{ toYaml .Values.resources | indent 12 }}
+    {{- with .Values.nodeSelector }}
+      nodeSelector:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.affinity }}
+      affinity:
+{{ toYaml . | indent 8 }}
+    {{- end }}
+    {{- with .Values.tolerations }}
+      tolerations:
+{{ toYaml . | indent 8 }}
+    {{- end }}
