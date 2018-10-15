@@ -11,6 +11,6 @@ RUN curl --silent --show-error https://getcomposer.org/installer | php
 
 RUN php composer.phar install --no-dev
 
-EXPOSE 5672
+EXPOSE 5672 3306
 
 ENTRYPOINT php worker.php
