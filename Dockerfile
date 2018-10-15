@@ -1,11 +1,12 @@
-FROM disc/php-amqp
+FROM alexmasterov/alpine-php:7.2
 
-COPY . /srv/app
+COPY . /app
 
-RUN apt-get update && \
-    apt-get install -y --no-install-recommends git
+RUN apk add --update git 
 
-WORKDIR /srv/app
+RUN apk add --update curl
+
+WORKDIR /app
 
 RUN curl --silent --show-error https://getcomposer.org/installer | php
 
